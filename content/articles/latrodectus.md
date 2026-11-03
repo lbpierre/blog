@@ -459,12 +459,9 @@ is available [here](https://gitlab.com/lbpierre/lbpierre.gitlab.io/-/blob/master
 ### Defense evasion {#defense-evasion}
 
 To hid itself, Latrodectus uses Alternate Data Stream as explain in [reveng.ai blogpost](https://blog.reveng.ai/latrodectus-distribution-via-brc4/)
-
 {{% sidenote %}}
 The code was borrowed from [byt3bl33d3r/OffensiveNim github repository](https://github.com/byt3bl33d3r/OffensiveNim/blob/c056dc876870ac385159e2dc2a234984807e3236/src/self_delete_bin.nim#L16).
-{{% /sidenote %}}
-
-<details>
+{{% /sidenote %}} <details>
 <summary>reveng.ai citation</summary>
 <div class="details">
 

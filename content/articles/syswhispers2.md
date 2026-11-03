@@ -18,12 +18,9 @@ draft = false
 ## Readme.md {#readme-dot-md}
 
 [SysWhispers](https://github.com/jthuraisamy/SysWhispers2)
-
 {{% sidenote %}}
 [github.com/jthuraisamy/SysWhispers2](https://github.com/jthuraisamy/SysWhispers2)
-{{% /sidenote %}}
-
-helps with evasion by generating header/ASM files implants
+{{% /sidenote %}} helps with evasion by generating header/ASM files implants
 can use to make direct system calls.
 
 Various security products place hooks in user-mode API functions which allow
@@ -40,12 +37,9 @@ VMray recently [tweeted](https://twitter.com/vmray/status/1762600614163284466) t
 This note offers a step-by-step guide to identify the syscalls made by malware
 that utilizes SysWhispers2, a technique that can be applied in any situation
 where SysWhispers2 is present.
-
 {{% sidenote %}}
 _NB: Tools: IDA decompiler and xdbg_
-{{% /sidenote %}}
-
-The analysis began with the sample `PERFERENDISF.jar` shared in VMRay tweet, which is available on Malware Bazaar, with the
+{{% /sidenote %}} The analysis began with the sample `PERFERENDISF.jar` shared in VMRay tweet, which is available on Malware Bazaar, with the
 SHA-256: [d26ab01b293b2d439a20d1dffc02a5c9f2523446d811192836e26d370a34d1b4](https://bazaar.abuse.ch/sample/d26ab01b293b2d439a20d1dffc02a5c9f2523446d811192836e26d370a34d1b4/)
 
 We skipped to the stage 2 of the Pikabot loader, which employs ****SysWhispers2**** to load the
@@ -69,12 +63,9 @@ Here are examples of direct syscalls made by the malware.
 To operate SysWhispers2, it is necessary to populate the `_SW2_SYSCALL_LIST` structure,
 which is an array containing correspondences between hashes and `ntdll.dll` addresses.
 According to the file `base.h`
-
 {{% sidenote %}}
 [jthuraisamy/SysWhispers2/blob/main/data/base.h](https://github.com/jthuraisamy/SysWhispers2/blob/main/data/base.h)
-{{% /sidenote %}}
-
-the two structures are:
+{{% /sidenote %}} the two structures are:
 
 ```c++
 struct _SW2_SYSCALL_ENTRY
@@ -111,12 +102,9 @@ which is convenient when we later retrieve the populated data with the debugger.
 {{< figure src="/ox-hugo/global_syscall_list.png" caption="<span class=\"figure-number\">Figure 3: </span>Reference of the \_SW2_SYSCALL_LIST structure" >}}
 
 According to the [source code](https://github.com/jthuraisamy/SysWhispers2/blob/main/data/base.c#L128-L141)
-
 {{% sidenote %}}
 See function `SW2_GetSyscallNumber` line 131.
-{{% /sidenote %}}
-
-the function used to get the address in ntdll from hash
+{{% /sidenote %}} the function used to get the address in ntdll from hash
 ensure that `_SW2_SYSCALL_LIST` structure is populated.
 
 The most "challenging" task is now to identify a call to `SW2_GetSyscallNumber`

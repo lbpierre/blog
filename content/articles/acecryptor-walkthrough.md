@@ -44,7 +44,7 @@ Using the [IDAtropy](https://github.com/danigargu/IDAtropy) plugin, we can easil
 The Shannon entropy is a mathematical function that corresponds to the amount of variation in information.
 Meaning, the more varied the data, the higher entropy is; and the more identical the information is, the lower it entropy is.
 
-<a id="org8728f34"></a>
+<a id="orgc548070"></a>
 
 ![](/ox-hugo/entropy.png)
 In the above capture of the entropy of ACECryptor sample, an unusual entropy stand out in the `.text` section.
@@ -68,11 +68,9 @@ First, search for cross-references (`XRefs`) to `VirtualProtect` (Figure 2).
 {{< figure src="/ox-hugo/searchVirtualProtect.png" caption="<span class=\"figure-number\">Figure 2: </span>Search VirtualProtect" >}}
 
 Then decompile the function using `VirtualProtect` from `Kernel32.dll`, whose signature is:
-
 {{% sidenote %}}
 According to MSDN document [MSDN VirtualProtect](https://learn.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-virtualprotect)
 {{% /sidenote %}}
-
 ```c++
 BOOL VirtualProtect(
   [in]  LPVOID lpAddress,
@@ -140,18 +138,12 @@ Before creating a structure for this, let take a look at the function `sub_673AC
 
 The function loop over a data structure in NtCurrentPeb (_Process Envionment Block_),
 starting typing the different local variables using the MSDN documentation
-
 {{% sidenote %}}
 MSDN Winternl PEB: <https://learn.microsoft.com/en-us/windows/win32/api/winternl/ns-winternl-peb>
-{{% /sidenote %}}
-
-and the igors-tip-of-the-week, plus looking at the IDA view `Local Types`
-
+{{% /sidenote %}} and the igors-tip-of-the-week, plus looking at the IDA view `Local Types`
 {{% sidenote %}}
 Hex-rays igors tips: type libraries <https://hex-rays.com/blog/igors-tip-of-the-week-60-type-libraries/>
-{{% /sidenote %}}
-
-help to understand the purpose of that function, it goes to
+{{% /sidenote %}} help to understand the purpose of that function, it goes to
 
 <a id="figure--post-subtrees-collapsed"></a>
 
@@ -365,14 +357,11 @@ or they may be split into strings, boolean, or other types.
 
 However, to retype the variable with our newly created structure, we need to make IDA understand
 the negative structure offset. This can be done using [`__shifted` pointer](https://hex-rays.com/blog/igors-tip-of-the-week-54-shifted-pointers).
-
 {{% sidenote %}}
 Shifted pointers is another custom extension to the C syntax.
 They are used by IDA and decompiler to represent a pointer to an object with some offset or adjustment
 (positive or negative). Let’s see how they work and several situations where they can be useful.
-{{% /sidenote %}}
-
-In our case we retype the variable with this code `int *__shifted(stage2,0xF8) stage3`
+{{% /sidenote %}} In our case we retype the variable with this code `int *__shifted(stage2,0xF8) stage3`
 
 
 ### Anti Sandbox {#anti-sandbox}

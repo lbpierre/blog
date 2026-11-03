@@ -31,6 +31,12 @@
   (package-install 'ox-hugo)
   (require 'ox-hugo))
 
+;; #+begin_sidenote … #+end_sidenote stays inside its paragraph: without this,
+;; ox-hugo surrounds the block with blank lines and the note number ends up in
+;; a paragraph of its own.
+(add-to-list 'org-hugo-special-block-type-properties
+             '("sidenote" . (:trim-pre t :trim-post t)))
+
 (setq org-export-use-babel nil            ; never run code during export
       org-confirm-babel-evaluate nil
       make-backup-files nil)

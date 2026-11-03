@@ -18,13 +18,10 @@ draft = false
 ## TL;DR BumbleBee {#tl-dr-bumblebee}
 
 The loader delivers diverse payloads (_e.g: Cobalt Strike, ransomware, etc_), the operators of BumbleBee have been named _EXOTIC LILY_ by the TAG in a report published in March 2022.
-
 {{% sidenote %}}
 Google TAG article mentionned BumbleBee Loader (_e.g:_ The user-agent set to bumblebee, hence dubbed BUMBLEBEE.
 <https://blog.google/threat-analysis-group/exposing-initial-access-broker-ties-conti/>
-{{% /sidenote %}}
-
-Moreover, similarities with other loaders in terms of operation have been noticed notably with IcedID and Emotet.
+{{% /sidenote %}} Moreover, similarities with other loaders in terms of operation have been noticed notably with IcedID and Emotet.
 Code similarty (_hook installation_) with Trickbot have been observed and explained in the post [The chronicles of Bumblebee: The Hook, the Bee, and the Trickbot connection](https://elis531989.medium.com/the-chronicles-of-bumblebee-the-hook-the-bee-and-the-trickbot-connection-686379311056).
 The malware is well documented by now (_March 2023_) as evidenced by the number of reports on [malpedia](https://malpedia.caad.fkie.fraunhofer.de/details/win.bumblebee).
 
@@ -33,12 +30,9 @@ The malware is well documented by now (_March 2023_) as evidenced by the number 
 
 The malware has a custom unpacking mechanism, it manipulates hooks to setup its execution chain,
 the loader uses multiple environment detection techniques because of the complete integration of the project [al-khaser](https://github.com/LordNoteworthy/al-khaser)
-
 {{% sidenote %}}
 al-khaser is a PoC "malware" application with good intentions that aims to stress your anti-malware system. It performs a bunch of common malware tricks with the goal of seeing if you stay under the radar.
-{{% /sidenote %}}
-
-. It communicates with its command and control over HTTP. Since August 2022 the malware embeds a list of IP addresses in its configuration,
+{{% /sidenote %}} . It communicates with its command and control over HTTP. Since August 2022 the malware embeds a list of IP addresses in its configuration,
 some of them are legitimate IP addresses, this technique is also used by other malware such as Emotet and Trickbot.
 
 BumbleBee command and control IP addresses, port and the bot (or botnet) identifier are stored in the `.data` section, obfuscated with the _RC4_ encryption algorithm. A script to extract and deobfuscate
@@ -78,12 +72,9 @@ Details of a campaign using onedrive file sharing website are written in the art
 ## Configuration extractor {#configuration-extractor}
 
 As introduced above, the configuration is stored encrypted with the RC4 algorithm.
-
 {{% sidenote %}}
 RC4: Rivest Cipher 4, also known as ARC4: <https://en.wikipedia.org/wiki/RC4>
-{{% /sidenote %}}
-
-The key is in cleartext in the binary and its length is repeatedly (for BumbleBee case) fixed to <span class="underline">10 characters</span>.
+{{% /sidenote %}} The key is in cleartext in the binary and its length is repeatedly (for BumbleBee case) fixed to <span class="underline">10 characters</span>.
 
 Here is the two functions that implement RC4 algorithm in BumbleBee:
 

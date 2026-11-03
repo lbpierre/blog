@@ -55,13 +55,10 @@ class. Finally the hash is manipulated (oddly 🙃) to create the decryption key
 the rest of configuration (host, port, etc.).
 
 XWorm uses **Rijndael**
-
 {{% sidenote %}}
 The Advanced Encryption Standard (AES), also known by its original name Rijndael
 <https://en.wikipedia.org/wiki/Advanced_Encryption_Standard>
-{{% /sidenote %}}
-
-encryption in ECB (_Electronic CodeBook_) mode, no IV (_Initial Vector_) is required here.
+{{% /sidenote %}} encryption in ECB (_Electronic CodeBook_) mode, no IV (_Initial Vector_) is required here.
 To create the key, the malware creates the MD5 hash of a variable copies the 8 first bytes to store them at the beginning of a new allocated array (_of 16 bytes; the
 decryption key length_), then re-copies these same 8 bytes to the key array but not after the 8 first bytes but from the 7^th byte to the 15 byte.
 The last byte (16^th) is zero (due to the array initialization). The figure below schematizes how the key is built.

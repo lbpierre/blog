@@ -32,7 +32,8 @@
     {{- end }}
 
     <div class="prose post__body" data-post-body>
-      {{ .Content }}
+      {{- /* glue side-note numbers to the preceding word, like a superscript */}}
+      {{ .Content | replaceRE `\s+(<label for="sn-)` "$1" | safeHTML }}
     </div>
   </div>
 

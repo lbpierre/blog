@@ -4,7 +4,7 @@ author = ["pbo"]
 description = "All notes related to Python goes here"
 publishDate = 2023-11-24T00:00:00+01:00
 aliases = ["/notes/python/"]
-lastmod = 2026-11-03T16:05:44+01:00
+lastmod = 2026-11-03T16:38:10+01:00
 tags = ["python"]
 categories = ["dev"]
 draft = false
@@ -79,11 +79,9 @@ Here are some examples of what these objects could be:
 4.  ****Shell Extensions****: COM objects that extend the functionality of the Windows Shell,
     such as custom context menu handlers, icon handlers, or property sheet handlers.
 5.  ****Service Objects****: Objects that provide specific services to other applications, like data access or messaging.
-
 {{% sidenote %}}
 <https://learn.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-cocreateinstance>
 {{% /sidenote %}}
-
 ```C++
   HRESULT CoCreateInstance(
   [in]  REFCLSID  rclsid,
