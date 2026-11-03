@@ -1,0 +1,40 @@
+{{- /*
+  Filterable list of posts.
+  ctx: dict "pages" <Pages> "filters" <bool> "feature" <bool>
+  Filters: tags (AND) + sort. Full-text search lives in the header.
+  Without JavaScript every card stays visible and the filter controls are hidden.
+*/ -}}
+{{- $pages := .pages -}}
+<div class="listing" data-filter-root>
+{{- if .filters }}
+{{- $tags := dict -}}
+{{- range $pages }}{{ range .Params.tags }}{{ $k := lower . }}{{ $tags = merge $tags (dict $k (add (index $tags $k | default 0) 1)) }}{{ end }}{{ end -}}
+<div class="filters" data-filters hidden>
+  {{- with $tags }}
+  <div class="filters__tags" role="group" aria-label="Filter by tag">
+    {{- range $name, $count := . }}
+    <button type="button" class="chip" data-filter-tag="{{ $name }}" aria-pressed="false">#{{ $name }} <span class="chip__count">{{ $count }}</span></button>
+    {{- end }}
+  </div>
+  {{- end }}
+  <div class="filters__side">
+    <p class="filters__status" aria-live="polite"><span data-filter-count>{{ len $pages }}</span> <span data-filter-noun>article{{ if ne (len $pages) 1 }}s{{ end }}</span><button type="button" class="link-btn" data-filter-reset hidden>Clear</button></p>
+    <label class="filters__select">
+      <span class="visually-hidden">Sort articles</span>
+      <select data-filter-sort>
+        <option value="desc">Newest</option>
+        <option value="asc">Oldest</option>
+        <option value="title">A→Z</option>
+      </select>
+    </label>
+  </div>
+</div>
+{{- end }}
+
+<div class="cards" data-post-list>
+  {{- range $i, $p := $pages }}
+  {{ partial "post-card.html" (dict "page" $p "featured" (and $.feature (eq $i 0))) }}
+  {{- end }}
+</div>
+<p class="empty" data-filter-empty hidden>No article matches these filters. <button type="button" class="link-btn" data-filter-reset>Clear filters</button></p>
+</div>

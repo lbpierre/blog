@@ -1,0 +1,31 @@
+{{ define "bodyclass" }}page page--list{{ end }}
+{{ define "main" }}
+<header class="page-head container">
+  <h1 class="page-head__title">{{ .Title }}</h1>
+  {{- with .Content }}<div class="prose page-head__lead">{{ . }}</div>{{ end }}
+</header>
+
+{{- /* Archive: compact timeline grouped by year */}}
+<section class="container archive" aria-label="Archive">
+  {{- range .Pages.GroupByDate "2006" }}
+  <h2 class="archive__year">{{ .Key }} <span class="archive__count">{{ len .Pages }}</span></h2>
+  <ol class="archive__list">
+    {{- range .Pages }}
+    {{- $img := partial "first-image.html" . }}
+    <li class="archive__item">
+      <a class="archive__link" href="{{ .RelPermalink }}">
+        <span class="archive__thumb">{{ with $img.thumb }}<img src="{{ . }}" alt="" loading="lazy" decoding="async">{{ end }}</span>
+        <span class="archive__text">
+          <span class="archive__title">{{ .Title }}</span>
+          <span class="archive__meta">
+            <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "Jan 2" }}</time>
+            {{- with .Params.tags }} · {{ range $i, $t := . }}{{ if $i }} {{ end }}#{{ $t }}{{ end }}{{ end }}
+          </span>
+        </span>
+      </a>
+    </li>
+    {{- end }}
+  </ol>
+  {{- end }}
+</section>
+{{ end }}

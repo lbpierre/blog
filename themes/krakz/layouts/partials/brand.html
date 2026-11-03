@@ -1,0 +1,6 @@
+<a class="brand__link" href="{{ "/" | relURL }}" title="{{ site.Title }}: home">
+  <span class="brand__tagline">{{ site.Params.tagline | default site.Title }}</span>
+  {{- with site.Params.subtitle | default site.Params.description }}
+  <span class="brand__sub">{{ . }}</span>
+  {{- end }}
+</a>

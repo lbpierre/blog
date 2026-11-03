@@ -1,0 +1,4 @@
+{{- /* Usage: {{ partial "icon.html" "search" }} — inlines assets/icons/<name>.svg */ -}}
+{{- with resources.Get (printf "icons/%s.svg" .) -}}
+{{- .Content | replaceRE `^\s+|\s+$` "" | safeHTML -}}
+{{- end -}}

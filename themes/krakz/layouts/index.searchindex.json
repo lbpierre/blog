@@ -1,0 +1,13 @@
+{{- $pages := where site.RegularPages "Section" "in" (site.Params.mainSections | default (slice "articles")) -}}
+{{- $index := slice -}}
+{{- range $pages.ByDate.Reverse -}}
+  {{- $index = $index | append (dict
+      "title" .Title
+      "url" .RelPermalink
+      "date" (.Date.Format (site.Params.dateFormat | default "Jan 2, 2006"))
+      "tags" (.Params.tags | default slice)
+      "description" (.Description | plainify | replaceRE `\*+` "" | replaceRE `\s+` " " | replaceRE `^\s+|\s+$` "")
+      "content" (.Plain | replaceRE `\s+` " " | replaceRE `^\s+|\s+$` "")
+  ) -}}
+{{- end -}}
+{{- $index | jsonify -}}

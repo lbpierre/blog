@@ -1,0 +1,12 @@
+name        = "Krakz"
+license     = "MIT"
+licenselink = "https://opensource.org/licenses/MIT"
+description = "A calm, light, reading-first Hugo theme for technical blogs written with Emacs Org-mode and ox-hugo."
+homepage    = "https://blog.krakz.fr/"
+tags        = ["blog", "light", "ox-hugo", "org-mode", "code", "minimal"]
+features    = ["search", "tag filtering", "rss", "atom", "sidenotes", "syntax highlighting", "table of contents"]
+min_version = "0.128.0"
+
+[author]
+  name = "Pierre Le Bourhis"
+  homepage = "https://blog.krakz.fr/"

@@ -1,0 +1,35 @@
+{{- /*
+  Returns the cover of a page as a dict {src, thumb, alt} or nothing.
+  Priority: front matter `image` > first {{< figure src=… >}} > first ![](…).
+  When the image is reachable through the asset pipeline (static/ox-hugo is
+  mounted on assets/ox-hugo by the site config), a WebP thumbnail is built.
+*/ -}}
+{{- $src := "" -}}
+{{- with .Params.image -}}{{- $src = . -}}{{- end -}}
+{{- if not $src -}}
+  {{- with findRESubmatch `\{\{<\s*figure\s+[^>]*?src="([^"]+)"` .RawContent 1 -}}
+    {{- $src = index (index . 0) 1 -}}
+  {{- end -}}
+{{- end -}}
+{{- if not $src -}}
+  {{- with findRESubmatch `!\[[^\]]*\]\(([^)\s]+)` .RawContent 1 -}}
+    {{- $src = index (index . 0) 1 -}}
+  {{- end -}}
+{{- end -}}
+{{- $result := dict -}}
+{{- if $src -}}
+  {{- $thumb := $src -}}
+  {{- if not (strings.HasPrefix $src "http") -}}
+    {{- $img := resources.Get (strings.TrimPrefix "/" $src) -}}
+    {{- if not $img -}}{{- with $.Resources.GetMatch $src -}}{{- $img = . -}}{{- end -}}{{- end -}}
+    {{- if and $img (in (slice "image/png" "image/jpeg" "image/webp") $img.MediaType.Type) -}}
+      {{- if gt $img.Width 900 -}}
+        {{- $thumb = ($img.Resize "900x webp q82").RelPermalink -}}
+      {{- else -}}
+        {{- $thumb = ($img.Process "webp q85").RelPermalink -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+  {{- $result = dict "src" $src "thumb" $thumb "alt" (.Params.imageAlt | default .Title) -}}
+{{- end -}}
+{{- return $result -}}

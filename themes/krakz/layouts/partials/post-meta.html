@@ -1,0 +1,6 @@
+{{- $p := . -}}
+<span class="meta__item">
+  {{ partial "icon.html" "calendar" }}
+  <time datetime="{{ $p.Date.Format "2006-01-02" }}">{{ $p.Date.Format (site.Params.dateFormat | default "Jan 2, 2006") }}</time>
+</span>
+<span class="meta__item">{{ partial "icon.html" "clock" }}{{ $p.ReadingTime }} min read</span>

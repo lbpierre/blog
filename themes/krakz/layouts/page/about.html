@@ -1,0 +1,62 @@
+{{- /*
+  About page (front matter: layout = "about").
+  Optional params: role, team, company, companyurl, avatar (image path).
+*/ -}}
+{{ define "bodyclass" }}page page--about{{ end }}
+{{ define "main" }}
+<article class="about">
+  <header class="profile container">
+    <div class="profile__avatar{{ with .Params.avatar }} profile__avatar--img{{ end }}" aria-hidden="true">
+      {{- with .Params.avatar }}
+      <img src="{{ . | relURL }}" alt="">
+      {{- else }}
+      {{- $name := site.Params.author | default site.Title }}
+      {{- $initials := "" }}{{ range first 2 (split $name " ") }}{{ $initials = printf "%s%s" $initials (substr . 0 1) }}{{ end }}
+      <span>{{ $initials }}</span>
+      {{- end }}
+    </div>
+    <div class="profile__text">
+      <p class="profile__kicker">{{ .Title }}</p>
+      <h1 class="profile__name">{{ site.Params.author | default site.Title }}</h1>
+      {{- with .Params.role }}
+      <p class="profile__role">
+        <span class="profile__title">{{ . }}</span>
+        {{- with $.Params.company }}
+        <span class="profile__at">at</span>
+        {{ with $.Params.companyurl }}<a class="profile__company" href="{{ . }}" rel="noopener">{{ $.Params.company }}</a>{{ else }}<span class="profile__company">{{ . }}</span>{{ end }}
+        {{- end }}
+      </p>
+      {{- end }}
+      {{- with .Params.team }}<p class="profile__team"><span class="profile__dot" aria-hidden="true"></span>{{ . }}</p>{{ end }}
+    </div>
+  </header>
+
+  <div class="post__layout">
+    <div class="prose post__body about__body">
+      {{ .Content }}
+    </div>
+  </div>
+
+  {{- with site.Params.social }}
+  <section class="container elsewhere" aria-labelledby="elsewhere-title">
+    <h2 id="elsewhere-title" class="elsewhere__title">Find me elsewhere</h2>
+    <ul class="elsewhere__list">
+      {{- range . }}
+      <li>
+        <a class="elsewhere__link" href="{{ .url }}" rel="{{ with .rel }}{{ . }} {{ end }}noopener">
+          <span class="elsewhere__icon">{{ partial "icon.html" .icon }}</span>
+          <span class="elsewhere__text">
+            <span class="elsewhere__name">{{ .name }}</span>
+            <span class="elsewhere__handle">{{ (urls.Parse .url).Host | replaceRE `^www\.` "" }}{{ (urls.Parse .url).Path | replaceRE `/$` "" }}</span>
+          </span>
+        </a>
+      </li>
+      {{- end }}
+    </ul>
+    {{- with site.Home.OutputFormats.Get "RSS" }}
+    <p class="elsewhere__feeds">Or follow the blog via <a href="{{ .RelPermalink }}">RSS</a>{{ with site.Home.OutputFormats.Get "Atom" }} or <a href="{{ .RelPermalink }}">Atom</a>{{ end }}.</p>
+    {{- end }}
+  </section>
+  {{- end }}
+</article>
+{{ end }}

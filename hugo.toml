@@ -1,0 +1,94 @@
+baseURL      = "https://blog.krakz.fr/"
+languageCode = "en-us"
+title        = "Krakz"
+theme        = "krakz"
+
+enableRobotsTXT = true
+
+[params]
+  tagline     = "Malware hunting & reverse engineering notes"
+  description = "Malware analysis and reverse engineering notes: loaders, crypters, RATs, Windows internals and the tooling to take them apart."
+  # Short line shown under the tagline in the header (falls back to description)
+  subtitle    = "Loaders, crypters, RATs, Windows internals and the tooling to take them apart."
+  author      = "Pierre Le Bourhis"
+  # Go date layout used across the theme
+  dateFormat  = "Jan 2, 2006"
+  # Sections listed on the home page / in feeds
+  mainSections = ["articles"]
+  # true: feeds carry the full article, false: only the summary
+  feedFullContent = true
+  # Use the favicon set in static/ (favicon.ico, favicon-*.png, apple-touch-icon.png)
+  favicons = true
+
+  # Footer social links (icons ship with the theme: x, github, mastodon, linkedin)
+  [[params.social]]
+    name = "X"
+    icon = "x"
+    url  = "https://x.com/plebourhis"
+  [[params.social]]
+    name = "GitHub"
+    icon = "github"
+    url  = "https://github.com/lbpierre"
+  [[params.social]]
+    name = "Mastodon"
+    icon = "mastodon"
+    url  = "https://infosec.exchange/@krakz"
+    rel  = "me"
+  [[params.social]]
+    name = "LinkedIn"
+    icon = "linkedin"
+    url  = "https://www.linkedin.com/in/pierre-le-bourhis-ba109ba7/"
+
+[menus]
+  [[menus.main]]
+    name   = "Articles"
+    pageRef = "/articles"
+    weight = 10
+  [[menus.main]]
+    name   = "About"
+    pageRef = "/about"
+    weight = 20
+
+[taxonomies]
+  category = "categories"
+  tag      = "tags"
+
+# URLs stay as before: /articles/<EXPORT_FILE_NAME>/ (Hugo default)
+
+[outputs]
+  home     = ["HTML", "RSS", "Atom", "SearchIndex"]
+  section  = ["HTML", "RSS", "Atom"]
+  taxonomy = ["HTML"]
+  term     = ["HTML", "RSS", "Atom"]
+
+[markup]
+  [markup.goldmark.renderer]
+    unsafe = true        # required by ox-hugo (raw HTML: <details>, captions…)
+  [markup.highlight]
+    noClasses          = false   # colours come from the theme's chroma.css
+    lineNos            = true    # line numbers on by default…
+    lineNumbersInTable = false   # …inline + sticky, never copied
+    tabWidth           = 4
+    guessSyntax        = false
+  [markup.tableOfContents]
+    startLevel = 2
+    endLevel   = 3
+
+# Mounts (declaring one replaces Hugo's default for that target, so the
+# defaults for static/ and assets/ are listed explicitly).
+[module]
+  [[module.mounts]]
+    source = "static"
+    target = "static"
+  [[module.mounts]]
+    source = "assets"
+    target = "assets"
+  # ox-hugo images also go through the image pipeline (WebP card thumbnails)
+  [[module.mounts]]
+    source = "static/ox-hugo"
+    target = "assets/ox-hugo"
+  # Large companion files (scripts, IDBs…) kept in scripts/ are published
+  # at /files/… and linked with the {{< download >}} shortcode.
+  [[module.mounts]]
+    source = "scripts"
+    target = "static/files"

@@ -1,0 +1,11 @@
+{{ define "bodyclass" }}page page--term{{ end }}
+{{ define "main" }}
+<header class="page-head container">
+  <p class="page-head__kicker"><a href="{{ .Parent.RelPermalink }}">{{ .Parent.Title }}</a></p>
+  <h1 class="page-head__title">{{ if eq .Data.Plural "tags" }}#{{ end }}{{ .Title }}</h1>
+  <p class="page-head__lead">{{ len .Pages }} article{{ if ne (len .Pages) 1 }}s{{ end }}{{ with .OutputFormats.Get "RSS" }} · <a href="{{ .RelPermalink }}">feed for this {{ $.Data.Singular }}</a>{{ end }}</p>
+</header>
+<section class="container container--wide">
+  {{ partial "post-list.html" (dict "pages" .Pages.ByDate.Reverse "filters" false "feature" false) }}
+</section>
+{{ end }}

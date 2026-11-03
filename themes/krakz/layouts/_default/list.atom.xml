@@ -1,0 +1,42 @@
+{{- $pctx := . -}}
+{{- if .IsHome -}}{{ $pctx = site }}{{- end -}}
+{{- $pages := slice -}}
+{{- if or $.IsHome $.IsSection -}}
+{{- $pages = where $pctx.RegularPages "Section" "in" (site.Params.mainSections | default (slice "articles")) -}}
+{{- else -}}
+{{- $pages = $pctx.Pages -}}
+{{- end -}}
+{{- $pages = $pages.ByDate.Reverse -}}
+{{- $limit := site.Config.Services.RSS.Limit -}}
+{{- if ge $limit 1 -}}{{- $pages = $pages | first $limit -}}{{- end -}}
+{{- printf "<?xml version=\"1.0\" encoding=\"utf-8\"?>" | safeHTML }}
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="{{ site.Language.LanguageCode }}">
+  <title>{{ if eq .Title site.Title }}{{ site.Title }}{{ else }}{{ with .Title }}{{ . }} · {{ end }}{{ site.Title }}{{ end }}</title>
+  <subtitle>{{ site.Params.description | default site.Title }}</subtitle>
+  <id>{{ .Permalink }}</id>
+  {{- with .OutputFormats.Get "Atom" }}
+  <link href="{{ .Permalink }}" rel="self" type="application/atom+xml"/>
+  {{- end }}
+  <link href="{{ .Permalink }}" rel="alternate" type="text/html"/>
+  {{- with index $pages 0 }}
+  <updated>{{ .Lastmod.Format "2006-01-02T15:04:05Z07:00" | safeHTML }}</updated>
+  {{- end }}
+  <author><name>{{ site.Params.author | default site.Title }}</name><uri>{{ site.Home.Permalink }}</uri></author>
+  <generator uri="https://gohugo.io/">Hugo</generator>
+  {{- range $pages }}
+  <entry>
+    <title type="html">{{ .Title }}</title>
+    <link href="{{ .Permalink }}" rel="alternate" type="text/html"/>
+    <id>{{ .Permalink }}</id>
+    <published>{{ .Date.Format "2006-01-02T15:04:05Z07:00" | safeHTML }}</published>
+    <updated>{{ .Lastmod.Format "2006-01-02T15:04:05Z07:00" | safeHTML }}</updated>
+    {{- range .Params.tags }}
+    <category term="{{ . }}"/>
+    {{- end }}
+    <summary type="text">{{ .Description | default .Summary | plainify | replaceRE `\*+` "" | replaceRE `^\s+|\s+$` "" }}</summary>
+    {{- if site.Params.feedFullContent }}
+    <content type="html">{{ .Content | replaceRE `[\x00-\x08\x0B\x0C\x0E-\x1F]` "" | html }}</content>
+    {{- end }}
+  </entry>
+  {{- end }}
+</feed>

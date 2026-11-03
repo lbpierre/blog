@@ -1,0 +1,63 @@
+{{ define "bodyclass" }}page page--single{{ if not .Params.notoc }} has-toc{{ end }}{{ end }}
+{{ define "main" }}
+<div class="reading-progress" aria-hidden="true"><span data-progress></span></div>
+<article class="post">
+  <header class="post__head container">
+    {{- with .Params.categories }}
+    <p class="post__kicker">{{ range $i, $c := . }}{{ if $i }} · {{ end }}<a class="category" href="{{ (printf "/categories/%s/" ($c | urlize)) | relURL }}">{{ $c }}</a>{{ end }}</p>
+    {{- end }}
+    <h1 class="post__title">{{ .Title }}</h1>
+    <p class="meta post__meta">
+      {{ partial "post-meta.html" . }}
+      {{- if and .Lastmod (gt (.Lastmod.Sub .Date).Hours 48.0) }}
+      <span class="meta__item">updated <time datetime="{{ .Lastmod.Format "2006-01-02" }}">{{ .Lastmod.Format (site.Params.dateFormat | default "Jan 2, 2006") }}</time></span>
+      {{- end }}
+    </p>
+    {{- with .Params.tags }}
+    <ul class="tags post__tags" aria-label="Tags">
+      {{- range . }}<li><a class="tag" href="{{ (printf "/tags/%s/" (. | urlize)) | relURL }}">#{{ . }}</a></li>{{ end }}
+    </ul>
+    {{- end }}
+  </header>
+
+  <div class="post__layout">
+    {{- $toc := .TableOfContents }}
+    {{- if and (not .Params.notoc) (gt (len (findRE `<li>` $toc)) 2) }}
+    <aside class="toc" aria-label="Table of contents">
+      <details class="toc__box" open data-toc>
+        <summary class="toc__title">On this page</summary>
+        {{ $toc }}
+      </details>
+    </aside>
+    {{- end }}
+
+    <div class="prose post__body" data-post-body>
+      {{ .Content }}
+    </div>
+  </div>
+
+  <footer class="post__foot container">
+    {{- with .Params.tags }}
+    <div class="post__foot-tags">
+      <span class="post__foot-label">Filed under</span>
+      <ul class="tags">{{ range . }}<li><a class="tag" href="{{ (printf "/tags/%s/" (. | urlize)) | relURL }}">#{{ . }}</a></li>{{ end }}</ul>
+    </div>
+    {{- end }}
+
+    {{- $pages := where site.RegularPages "Section" .Section }}
+    {{- $newer := $pages.ByDate.Next . }}
+    {{- $older := $pages.ByDate.Prev . }}
+    {{- if or $newer $older }}
+    <nav class="pager" aria-label="More articles">
+      {{- with $older }}
+      <a class="pager__link pager__link--prev" href="{{ .RelPermalink }}"><span class="pager__label">← Older</span><span class="pager__title">{{ .Title }}</span></a>
+      {{- else }}<span></span>{{ end }}
+      {{- with $newer }}
+      <a class="pager__link pager__link--next" href="{{ .RelPermalink }}"><span class="pager__label">Newer →</span><span class="pager__title">{{ .Title }}</span></a>
+      {{- end }}
+    </nav>
+    {{- end }}
+  </footer>
+</article>
+<button class="to-top icon-btn" type="button" aria-label="Back to top" data-to-top hidden>{{ partial "icon.html" "arrow-up" }}</button>
+{{ end }}

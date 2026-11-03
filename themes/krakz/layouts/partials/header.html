@@ -1,0 +1,39 @@
+<header class="site-header">
+  <div class="site-header__inner">
+    {{- $brand := partial "brand.html" . }}
+    {{- if .IsHome }}<h1 class="brand">{{ $brand }}</h1>{{ else }}<p class="brand">{{ $brand }}</p>{{ end }}
+
+    <nav class="nav" aria-label="Main">
+      <ul class="nav__list">
+        {{- $current := . }}
+        {{- range site.Menus.main }}
+        {{- $active := or ($current.IsMenuCurrent "main" .) ($current.HasMenuCurrent "main" .) }}
+        {{- with .Page }}{{ if or (eq $current .) ($current.IsDescendant .) }}{{ $active = true }}{{ end }}{{ end }}
+        <li><a class="nav__link{{ if $active }} is-active{{ end }}" href="{{ .URL }}"{{ if $active }} aria-current="page"{{ end }}>{{ .Name }}</a></li>
+        {{- end }}
+      </ul>
+
+      <div class="search" data-search>
+        <button class="icon-btn search__toggle" type="button" aria-label="Search articles" aria-expanded="false" aria-controls="search-panel" data-search-toggle>
+          {{ partial "icon.html" "search" }}
+        </button>
+        <div class="search__panel" id="search-panel" role="search" hidden>
+          <label class="visually-hidden" for="search-input">Search articles</label>
+          <span class="search__icon">{{ partial "icon.html" "search" }}</span>
+          <input class="search__input" id="search-input" type="search" placeholder="Search articles…" autocomplete="off" spellcheck="false" data-search-input>
+          <kbd class="search__kbd" aria-hidden="true">Esc</kbd>
+          <div class="search__results" data-search-results role="listbox" aria-label="Search results"></div>
+        </div>
+      </div>
+
+      <div class="feeds">
+        {{- with site.Home.OutputFormats.Get "RSS" }}
+        <a class="feed-link" href="{{ .RelPermalink }}" title="Subscribe via RSS">{{ partial "icon.html" "rss" }}<span>RSS</span></a>
+        {{- end }}
+        {{- with site.Home.OutputFormats.Get "Atom" }}
+        <a class="feed-link feed-link--atom" href="{{ .RelPermalink }}" title="Subscribe via Atom">{{ partial "icon.html" "rss" }}<span>Atom</span></a>
+        {{- end }}
+      </div>
+    </nav>
+  </div>
+</header>

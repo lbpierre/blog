@@ -1,0 +1,81 @@
+# Hugo → GitHub Pages
+#
+# Workflow: write in content-org/*.org, run `make export` locally (ox-hugo),
+# then commit the org files AND the generated content/ + static/ox-hugo/.
+# This job only builds the committed Markdown with Hugo and publishes it.
+#
+# One-time setup on GitHub:
+#   Settings → Pages → Build and deployment → Source: "GitHub Actions"
+#   Settings → Pages → Custom domain: blog.krakz.fr  (+ "Enforce HTTPS")
+name: Deploy blog
+
+on:
+  push:
+    branches: [main]
+  schedule:
+    - cron: "17 5 * * *"    # daily rebuild: publishes posts whose SCHEDULED date has come
+  workflow_dispatch:        # manual "Run workflow" button
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Only one deployment at a time; let an in-progress one finish.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      HUGO_VERSION: 0.131.0   # same version as the local build
+      HUGO_ENVIRONMENT: production
+      TZ: Europe/Paris        # publish dates are local (ox-hugo +01:00/+02:00)
+    steps:
+      - name: Install Hugo (extended)
+        run: |
+          wget -q -O "${{ runner.temp }}/hugo.deb" \
+            "https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_extended_${HUGO_VERSION}_linux-amd64.deb"
+          sudo dpkg -i "${{ runner.temp }}/hugo.deb"
+          hugo version
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure GitHub Pages
+        id: pages
+        uses: actions/configure-pages@v5
+
+      - name: Restore Hugo image cache
+        uses: actions/cache@v4
+        with:
+          path: resources/_gen
+          key: hugo-gen-${{ env.HUGO_VERSION }}-${{ hashFiles('static/ox-hugo/**') }}
+          restore-keys: hugo-gen-${{ env.HUGO_VERSION }}-
+
+      - name: Build
+        run: |
+          hugo --gc --minify \
+            --baseURL "${{ steps.pages.outputs.base_url }}/"
+
+      - name: Upload site
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./public
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

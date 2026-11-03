@@ -1,0 +1,51 @@
+/* Krakz syntax palette for Chroma (markup.highlight.noClasses = false).
+   Muted, warm and readable on light backgrounds (all tokens ≥ 4.5:1 on #f7f9fc). */
+.chroma { color: #1f2633; background: var(--code-bg); }
+.chroma .err { color: #a61b1b; background: #fbe4e4; }
+
+/* Comments */
+.chroma .c, .chroma .ch, .chroma .cm, .chroma .c1, .chroma .cs { color: #6b7586; font-style: italic; }
+.chroma .cp, .chroma .cpf { color: #8a3b6b; }
+
+/* Keywords */
+.chroma .k, .chroma .kc, .chroma .kd, .chroma .kn, .chroma .kp, .chroma .kr { color: #2b5c92; font-weight: 700; }
+.chroma .kt { color: #6b4596; }
+
+/* Names */
+.chroma .na { color: #6b4596; }
+.chroma .nb, .chroma .bp { color: #22686c; }
+.chroma .nc, .chroma .nn { color: #6b4596; font-weight: 700; }
+.chroma .no { color: #8a5300; }
+.chroma .nd, .chroma .ni { color: #8a3b6b; }
+.chroma .ne { color: #a61b1b; font-weight: 700; }
+.chroma .nf, .chroma .fm { color: #9a4a22; }
+.chroma .nl { color: #8a5300; }
+.chroma .nt { color: #2b5c92; }
+.chroma .nv, .chroma .vc, .chroma .vg, .chroma .vi, .chroma .vm { color: #22686c; }
+.chroma .py { color: #9a4a22; }
+
+/* Literals */
+.chroma .s, .chroma .sa, .chroma .sb, .chroma .sc, .chroma .dl, .chroma .s2,
+.chroma .sh, .chroma .s1, .chroma .sx, .chroma .ss { color: #3a6e3f; }
+.chroma .sd { color: #6a7a5b; font-style: italic; }
+.chroma .se, .chroma .si { color: #8a5300; }
+.chroma .sr { color: #22686c; }
+.chroma .m, .chroma .mb, .chroma .mf, .chroma .mh, .chroma .mi, .chroma .il, .chroma .mo { color: #8a5300; }
+.chroma .ld { color: #8a5300; }
+
+/* Operators & punctuation */
+.chroma .o, .chroma .ow { color: #4f5a6b; }
+.chroma .ow { font-weight: 700; }
+.chroma .p { color: #4f5a6b; }
+
+/* Generic (diffs, consoles) */
+.chroma .gd { color: #8f1d1d; background: #fbe4e4; }
+.chroma .gi { color: #285c2c; background: #e3f2df; }
+.chroma .ge { font-style: italic; }
+.chroma .gs { font-weight: 700; }
+.chroma .gh, .chroma .gu { color: #285d8f; font-weight: 700; }
+.chroma .gp { color: #6b7586; user-select: none; }
+.chroma .go { color: #4f5a6b; }
+.chroma .gr, .chroma .gt { color: #a61b1b; }
+.chroma .gl { text-decoration: underline; }
+.chroma .w { color: #b8c2cf; }

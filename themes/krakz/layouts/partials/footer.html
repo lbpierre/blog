@@ -1,0 +1,21 @@
+<footer class="site-footer">
+  <div class="site-footer__inner">
+    <p class="colophon">
+      Written in <a href="https://orgmode.org/">Org mode</a> with <a href="https://www.gnu.org/software/emacs/">Emacs</a>,
+      created by <a href="https://ox-hugo.scripter.co/">ox-hugo</a>
+      and built with <a href="https://gohugo.io/">Hugo</a>.
+      <span class="colophon__copy">© {{ now.Year }} {{ site.Params.author | default site.Title }}</span>
+    </p>
+    {{- with site.Params.social }}
+    <ul class="social" aria-label="Social links">
+      {{- range . }}
+      <li>
+        <a class="social__link" href="{{ .url }}" title="{{ .name }}" aria-label="{{ .name }}" rel="{{ with .rel }}{{ . }} {{ end }}noopener">
+          {{ partial "icon.html" .icon }}
+        </a>
+      </li>
+      {{- end }}
+    </ul>
+    {{- end }}
+  </div>
+</footer>

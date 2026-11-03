@@ -1,0 +1,15 @@
+{{- /* Standalone pages (About…): no meta, no TOC by default */ -}}
+{{ define "bodyclass" }}page page--simple{{ end }}
+{{ define "main" }}
+<article class="post">
+  <header class="post__head container">
+    <h1 class="post__title">{{ .Title }}</h1>
+    {{- with .Description }}<p class="post__lead">{{ . | plainify }}</p>{{ end }}
+  </header>
+  <div class="post__layout">
+    <div class="prose post__body">
+      {{ .Content }}
+    </div>
+  </div>
+</article>
+{{ end }}

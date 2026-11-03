@@ -1,0 +1,40 @@
+{{- /*
+  Download cards for files kept in the project's `scripts/` directory
+  (published at /files/ through a module mount, see the site hugo.toml).
+
+  Usage (one or several files, paths relative to scripts/):
+    {{< download "clsid-identifier.py" >}}
+    {{< download "IDB/ACECryptor/stage-0.bin.i64" "IDB/ACECryptor/stage-1.i64" >}}
+
+  From Org mode:  @@hugo:{{< download "clsid-identifier.py" >}}@@
+*/ -}}
+{{- $root := site.Params.downloads.dir | default "scripts" -}}
+{{- $url := site.Params.downloads.url | default "files" -}}
+<ul class="downloads">
+{{- range .Params }}
+  {{- $rel := strings.TrimPrefix "/" . }}
+  {{- $file := path.Join $root $rel }}
+  {{- $name := path.Base $rel }}
+  {{- $ext := strings.TrimPrefix "." (path.Ext $rel) | upper }}
+  {{- $size := "" }}
+  {{- if fileExists $file }}
+    {{- $b := (os.Stat $file).Size }}
+    {{- if ge $b 1048576 }}{{ $size = printf "%.1f MB" (div (float $b) 1048576) }}
+    {{- else if ge $b 1024 }}{{ $size = printf "%.0f KB" (div (float $b) 1024) }}
+    {{- else }}{{ $size = printf "%d B" $b }}{{ end }}
+  {{- else }}
+    {{- warnf "download shortcode: %q not found (in %s)" $file $.Page.File.Path }}
+  {{- end }}
+  <li>
+    <a class="download" href="{{ (path.Join $url $rel) | relURL }}" download>
+      <span class="download__icon">{{ partial "icon.html" "file-down" }}</span>
+      <span class="download__text">
+        <span class="download__name">{{ $name }}</span>
+        <span class="download__meta">{{ with $ext }}{{ . }}{{ end }}{{ with $size }} · {{ . }}{{ end }}</span>
+      </span>
+      <span class="download__action">{{ partial "icon.html" "download" }}</span>
+    </a>
+  </li>
+{{- end }}
+</ul>
+{{- /**/ -}}

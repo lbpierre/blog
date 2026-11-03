@@ -1,0 +1,2 @@
+Brand icons (x, github, mastodon, linkedin): Simple Icons v13.0.0 — CC0 1.0 (https://simpleicons.org)
+UI icons: Lucide v0.460.0 — ISC License (https://lucide.dev/license)

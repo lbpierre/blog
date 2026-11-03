@@ -1,0 +1,28 @@
+{{- /*
+  Drop-in replacement for Hugo's built-in figure (used by ox-hugo):
+  same parameters, plus lazy loading, intrinsic size and zoom-on-click.
+*/ -}}
+{{- $src := .Get "src" -}}
+{{- $w := .Get "width" -}}
+{{- $h := .Get "height" -}}
+{{- if and (not $w) (not (strings.HasPrefix $src "http")) -}}
+  {{- with resources.Get (strings.TrimPrefix "/" $src) -}}
+    {{- if in (slice "image/png" "image/jpeg" "image/gif" "image/webp") .MediaType.Type -}}
+      {{- $w = .Width -}}{{- $h = .Height -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+{{- $caption := .Get "caption" -}}
+{{- $alt := .Get "alt" | default ($caption | plainify | replaceRE `^(Figure|Fig\.)\s*\d+:\s*` "") -}}
+<figure{{ with .Get "class" }} class="{{ . }}"{{ end }}>
+  {{- with .Get "link" }}<a href="{{ . }}"{{ with $.Get "target" }} target="{{ . }}"{{ end }}{{ with $.Get "rel" }} rel="{{ . }}"{{ end }}>{{ end -}}
+  <img src="{{ cond (strings.HasPrefix $src "/") (strings.TrimPrefix "/" $src | relURL) $src }}" alt="{{ $alt }}"{{ with $w }} width="{{ . }}"{{ end }}{{ with $h }} height="{{ . }}"{{ end }} loading="lazy" decoding="async"{{ if not (.Get "link") }} data-zoom{{ end }}>
+  {{- if .Get "link" }}</a>{{ end -}}
+  {{- if or (.Get "title") $caption (.Get "attr") }}
+  <figcaption>
+    {{- with .Get "title" }}<strong class="figure-title">{{ . }}</strong> {{ end -}}
+    {{- $caption | markdownify -}}
+    {{- with .Get "attr" }} <span class="figure-attr">{{ with $.Get "attrlink" }}<a href="{{ . }}">{{ end }}{{ . | markdownify }}{{ if $.Get "attrlink" }}</a>{{ end }}</span>{{ end -}}
+  </figcaption>
+  {{- end }}
+</figure>

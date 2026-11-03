@@ -1,0 +1,36 @@
+{{- /* ctx: dict "page" <Page> "featured" <bool> */ -}}
+{{- $p := .page -}}
+{{- $img := partial "first-image.html" $p -}}
+{{- $desc := $p.Description | default ($p.Summary | plainify) | plainify | replaceRE `\*+` "" | replaceRE `\s+` " " | replaceRE `^\s+|\s+$` "" -}}
+{{- $tags := $p.Params.tags | default slice -}}
+<article class="card{{ if .featured }} card--featured{{ end }}{{ if not $img.src }} card--noimg{{ end }}"
+  data-post
+  data-title="{{ $p.Title | lower }}"
+  data-text="{{ printf "%s %s %s" $p.Title $desc (delimit $tags " ") | lower }}"
+  data-tags="{{ delimit (apply $tags "lower" ".") "|" }}"
+  data-year="{{ $p.Date.Year }}"
+  data-date="{{ $p.Date.Unix }}">
+  <a class="card__media" href="{{ $p.RelPermalink }}" tabindex="-1" aria-hidden="true">
+    {{- with $img.thumb }}
+    <img src="{{ . }}" alt="" loading="lazy" decoding="async">
+    {{- else }}
+    {{- $glyph := index (findRE `[^\x00-\x7F\s]+\s*$` $p.Title 1) 0 | default (substr $p.Title 0 1) }}
+    <span class="card__placeholder"><span>{{ $glyph }}</span></span>
+    {{- end }}
+  </a>
+  <div class="card__body">
+    <div class="card__eyebrow">
+      {{- with $p.Params.categories }}<span class="category">{{ index . 0 }}</span>{{ end }}
+      <span class="meta">{{ partial "post-meta.html" $p }}</span>
+    </div>
+    <h2 class="card__title"><a href="{{ $p.RelPermalink }}">{{ $p.Title }}</a></h2>
+    {{- with $desc }}<p class="card__desc">{{ . }}</p>{{ end }}
+    {{- with $tags }}
+    <ul class="tags" aria-label="Tags">
+      {{- range . }}
+      <li><a class="tag" href="{{ (printf "/tags/%s/" (. | urlize)) | relURL }}" data-tag-link="{{ . | lower }}">#{{ . }}</a></li>
+      {{- end }}
+    </ul>
+    {{- end }}
+  </div>
+</article>

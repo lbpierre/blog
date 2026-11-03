@@ -1,0 +1,7 @@
+{{ define "bodyclass" }}page page--home{{ end }}
+{{ define "main" }}
+<section class="container container--wide home" aria-label="Articles">
+  {{- $pages := where site.RegularPages "Section" "in" (site.Params.mainSections | default (slice "articles")) }}
+  {{ partial "post-list.html" (dict "pages" $pages.ByDate.Reverse "filters" true "feature" true) }}
+</section>
+{{ end }}

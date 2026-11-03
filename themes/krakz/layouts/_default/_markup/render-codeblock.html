@@ -1,0 +1,26 @@
+{{- /*
+  Code blocks: language label + copy button, Chroma highlighting.
+  - Line numbers are on by default (markup.highlight.lineNos).
+  - Plain output blocks (text, example, nil…) get no numbers unless the
+    block asks for them (ox-hugo: #+begin_src text -n).
+  - ox-hugo options (linenos, linenostart, hl_lines, anchors) are passed through.
+*/ -}}
+{{- $lang := lower (.Type | default "text") -}}
+{{- $aliases := dict "nil" "text" "example" "text" "plain" "text" "txt" "text" "c++" "cpp" "elisp" "emacs-lisp" "shell" "bash" "sh" "bash" "ps1" "powershell" "ditaa" "text" -}}
+{{- $lexer := index $aliases $lang | default $lang -}}
+{{- $label := cond (eq $lexer "text") "" $lang -}}
+{{- $opts := .Options -}}
+{{- if and (eq $lexer "text") (not (isset $opts "linenos")) -}}
+  {{- $opts = merge $opts (dict "linenos" false) -}}
+{{- end -}}
+{{- $lines := len (split (strings.TrimRight "\n" .Inner) "\n") -}}
+<div class="codeblock{{ if eq $lexer "text" }} codeblock--plain{{ end }}" data-codeblock>
+  <div class="codeblock__bar">
+    <span class="codeblock__lang">{{ $label | default "output" }}</span>
+    <span class="codeblock__lines">{{ $lines }} line{{ if ne $lines 1 }}s{{ end }}</span>
+    <button class="codeblock__copy" type="button" aria-label="Copy code" data-copy>
+      {{ partial "icon.html" "copy" }}{{ partial "icon.html" "check" }}<span data-copy-label>Copy</span>
+    </button>
+  </div>
+  {{ transform.Highlight .Inner $lexer $opts }}
+</div>

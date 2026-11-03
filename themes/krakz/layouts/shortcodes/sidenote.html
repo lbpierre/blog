@@ -1,0 +1,10 @@
+{{- /*
+  Numbered side note (ox-hugo: #+hugo_paired_shortcodes: %sidenote).
+  Wide screens: shown in the right margin. Narrow screens: tap the number.
+  The inner Markdown is left to the page renderer (it is a {{% %}} shortcode),
+  so it is only flattened to a single line to stay inline.
+*/ -}}
+{{- $id := printf "sn-%d" .Ordinal -}}
+{{- $body := .Inner | replaceRE `^\s+|\s+$` "" | replaceRE `\s*\n\s*` " " -}}
+<label for="{{ $id }}" class="sidenote-ref" aria-label="Show side note"></label><input type="checkbox" id="{{ $id }}" class="sidenote-toggle"><span class="sidenote" role="note">{{ $body | safeHTML }}</span>
+{{- /**/ -}}

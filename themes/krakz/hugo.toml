@@ -1,0 +1,22 @@
+# Defaults shipped with the theme (merged into the site config).
+
+[mediaTypes]
+  [mediaTypes."application/atom+xml"]
+    suffixes = ["xml"]
+
+[outputFormats]
+  [outputFormats.Atom]
+    mediaType = "application/atom+xml"
+    baseName  = "atom"
+    isPlainText = false
+    rel = "alternate"
+  [outputFormats.SearchIndex]
+    mediaType = "application/json"
+    baseName  = "index"
+    isPlainText = true
+    notAlternative = true
+
+[params]
+  dateFormat      = "Jan 2, 2006"
+  feedFullContent = true
+  mainSections    = ["articles"]
