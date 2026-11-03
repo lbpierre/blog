@@ -1,2 +1,4 @@
-<img src="{{ .Destination | safeURL }}" alt="{{ .Text }}"{{ with .Title }} title="{{ . }}"{{ end }} loading="lazy" decoding="async">
+{{- $src := .Destination -}}
+{{- if strings.HasPrefix $src "/" }}{{ $src = strings.TrimPrefix "/" $src | relURL }}{{ end -}}
+<img src="{{ $src | safeURL }}" alt="{{ .Text }}"{{ with .Title }} title="{{ . }}"{{ end }} loading="lazy" decoding="async">
 {{- /**/ -}}

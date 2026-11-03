@@ -59,10 +59,11 @@ jobs:
           key: hugo-gen-${{ env.HUGO_VERSION }}-${{ hashFiles('static/ox-hugo/**') }}
           restore-keys: hugo-gen-${{ env.HUGO_VERSION }}-
 
+      # baseURL comes from hugo.toml (https://blog.krakz.fr/) on purpose:
+      # the URL GitHub reports changes with the Pages settings, and a build made
+      # for lbpierre.github.io/blog/ prefixes every link with /blog/ (404s).
       - name: Build
-        run: |
-          hugo --gc --minify \
-            --baseURL "${{ steps.pages.outputs.base_url }}/"
+        run: hugo --gc --minify
 
       - name: Upload site
         uses: actions/upload-pages-artifact@v3
