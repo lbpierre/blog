@@ -8,7 +8,7 @@ description = """
   protocol, and the two modules recovered from the live infrastructure: the Mops stealer (also seen branded
   Redhive) and an update/download-and-execute module.
   """
-publishDate = 2026-11-01T00:00:00+01:00
+publishDate = 2026-10-17T00:00:00+02:00
 tags = ["loader", "stealer", "C2"]
 categories = ["RE"]
 draft = false

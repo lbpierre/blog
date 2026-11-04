@@ -5054,7 +5054,7 @@ print(f"String on stack: {stack_string}")
 #+end_src
 
 * DONE Mops: a WebSocket loader and its stealer module 🐶 :@RE:loader:stealer:C2:
-SCHEDULED: <2026-11-01 Tue>
+SCHEDULED: <2026-10-17 Sat>
 :PROPERTIES:
 :EXPORT_FILE_NAME: mops
 :END:
