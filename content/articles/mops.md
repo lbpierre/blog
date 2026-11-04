@@ -56,10 +56,13 @@ single value.
 
 The sample analysed here is the resident stage of a multi-layer chain. An initial access component
 tracked as **MixLoader** drops a payload packed with **Dormouse**, a packer written in Go.
+
 {{% sidenote %}}
 Dormouse embeds an encrypted and compressed PE, attempts a UAC elevation, weakens Microsoft Defender, then
 drops and runs its payload.
-{{% /sidenote %}} Once unpacked, the payload is a native x86-64 implant which I call the **Mops Loader**: its only first-party
+{{% /sidenote %}}
+
+Once unpacked, the payload is a native x86-64 implant which I call the **Mops Loader**: its only first-party
 purpose is to settle on the host and pull additional modules from its operator.
 
 The roles are cleanly separated:
@@ -120,9 +123,9 @@ side by side on the same host:
 
 | Build (SHA-256, short) | Campaign     | Hardcoded C2     | Install path / mutex                              |
 |------------------------|--------------|------------------|---------------------------------------------------|
-| `265994409a3d…`        | `6925266445` | `45.91.202.]146` | `RuntimeBroker.exe` / `Global\RuntimeBrokerAds`   |
-| `77afc987c830…`        | `5749377762` | `mops.]to`       | `RuntimeBrokerA.exe` / `Global\RuntimeBrokerAdsA` |
-| `4094bddf226f…`        | `8934503551` | `mops.]to`       | `RuntimeBrokerA.exe` / `Global\RuntimeBrokerAdsA` |
+| `265994409a3d…` | `6925266445` | `45.91.202.]146` | `RuntimeBroker.exe` / `Global\RuntimeBrokerAds`   |
+| `77afc987c830…` | `5749377762` | `mops.]to`       | `RuntimeBrokerA.exe` / `Global\RuntimeBrokerAdsA` |
+| `4094bddf226f…` | `8934503551` | `mops.]to`       | `RuntimeBrokerA.exe` / `Global\RuntimeBrokerAdsA` |
 
 All of them report version `1.0.0`, keep ports 406/408, the `WinRAR\Libs` module cache and the
 `.duckdns.org` DGA suffix. The operators did not even bother to hide the family name: it is the C2 domain.
@@ -163,9 +166,12 @@ Once the environment looks genuine, the loader:
     starts this copy and exits, so the long-running instance always lives under the disguised path;
 4.  if the process is not a member of the local Administrators group, it elevates with the well-known
     **CMSTPLUA** COM UAC bypass.
-{{% sidenote %}}
+
+    {{% sidenote %}}
     `Elevation:Administrator!new:{3E5FC7F9-9A51-4367-9063-A120244FBEC7}` then `ICMLuaUtil::ShellExec`.
-    {{% /sidenote %}} Before the elevation it rewrites its own PEB (image path and command line) so that it looks like
+    {{% /sidenote %}}
+
+    Before the elevation it rewrites its own PEB (image path and command line) so that it looks like
     `explorer.exe`, a precondition for the elevation to be granted silently;
 5.  enables `SeDebugPrivilege`, `SeAssignPrimaryTokenPrivilege` and `SeIncreaseQuotaPrivilege`;
 6.  registers four scheduled tasks through the Task Scheduler COM API (`ITaskService`), so no `schtasks.exe`
@@ -248,10 +254,13 @@ Sec-WebSocket-Version: 13
 ```
 
 `dGhlIHNhbXBsZSBub25jZQ==` is "the sample nonce", the example value of RFC 6455.
+
 {{% sidenote %}}
 RFC 6455, section 1.3: [Opening Handshake](https://www.rfc-editor.org/rfc/rfc6455#section-1.3). A
 legitimate client must send a random nonce for every connection.
-{{% /sidenote %}} A real browser never sends it, which makes it an excellent network signature. The expected answer is
+{{% /sidenote %}}
+
+A real browser never sends it, which makes it an excellent network signature. The expected answer is
 equally static:
 
 ```python
@@ -275,15 +284,15 @@ length encoding is buggy, so the client never sends large frames. The applicatio
 The bot identifier is the serial number of the `C:\` volume, rendered as 8 lowercase hexadecimal characters:
 stable across reboots, unique enough per machine.
 
-| Direction | Message                                             | Purpose                          |
-|-----------|-----------------------------------------------------|----------------------------------|
-| bot → C2  | `ready;<bot_id>;version;1.0.0`                      | first frame, announces the build |
-| C2 → bot  | `getinfo`                                           | host profiling request           |
-| bot → C2  | `info;<antivirus>;<OS>;<user>;<campaign_id>`        | answer (WMI `SecurityCenter2`)   |
-| C2 → bot  | `ping`                                              | keepalive, answered by `pong`    |
-| C2 → bot  | `task;createtask;<type>;task_id;<id>;version;<ver>` | run a module                     |
-| C2 → bot  | `task;closetask;...`                                | kill a running module            |
-| bot → C2  | `task_done;<task_id>`                               | module launched                  |
+| Direction  | Message                                             | Purpose                          |
+|------------|-----------------------------------------------------|----------------------------------|
+| bot → C2 | `ready;<bot_id>;version;1.0.0`                      | first frame, announces the build |
+| C2 → bot | `getinfo`                                           | host profiling request           |
+| bot → C2 | `info;<antivirus>;<OS>;<user>;<campaign_id>`        | answer (WMI `SecurityCenter2`)   |
+| C2 → bot | `ping`                                              | keepalive, answered by `pong`    |
+| C2 → bot | `task;createtask;<type>;task_id;<id>;version;<ver>` | run a module                     |
+| C2 → bot | `task;closetask;...`                                | kill a running module            |
+| bot → C2 | `task_done;<task_id>`                               | module launched                  |
 
 The version is sent in the first frame and the campaign identifier in the `info` answer, which lets the
 operator split infections per build and per campaign.
@@ -403,10 +412,13 @@ in the IOCs below. From here on I will simply call it the Mops stealer. Its entr
 #### Getting around Chrome App-Bound Encryption {#getting-around-chrome-app-bound-encryption}
 
 Since Chrome 127, cookies are protected by _App-Bound Encryption_.
+
 {{% sidenote %}}
 Google Security Blog, July 2024:
 [Improving the security of Chrome cookies on Windows](https://security.googleblog.com/2024/07/improving-security-of-chrome-cookies-on.html).
-{{% /sidenote %}} The cookie key is wrapped twice, with the user DPAPI and then with the SYSTEM DPAPI on top, and is supposed
+{{% /sidenote %}}
+
+The cookie key is wrapped twice, with the user DPAPI and then with the SYSTEM DPAPI on top, and is supposed
 to be unwrapped only by Chrome's elevation service. The stealer bypasses the service and does the work itself:
 
 1.  read `app_bound_encrypted_key` from the browser's `Local State`;
