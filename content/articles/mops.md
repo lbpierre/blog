@@ -11,7 +11,7 @@ description = """
 publishDate = 2026-11-01T00:00:00+01:00
 tags = ["loader", "stealer", "C2"]
 categories = ["RE"]
-draft = true
+draft = false
 +++
 
 {{< figure src="/ox-hugo/mops_header.jpg" >}}

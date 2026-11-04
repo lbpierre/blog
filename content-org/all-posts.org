@@ -5053,7 +5053,7 @@ stack_string = eh.getEmuString(sp)
 print(f"String on stack: {stack_string}")
 #+end_src
 
-* TODO Mops: a WebSocket loader and its stealer module 🐶     :@RE:loader:stealer:C2:
+* DONE Mops: a WebSocket loader and its stealer module 🐶 :@RE:loader:stealer:C2:
 SCHEDULED: <2026-11-01 Tue>
 :PROPERTIES:
 :EXPORT_FILE_NAME: mops
