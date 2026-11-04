@@ -5077,8 +5077,7 @@ Keep this in mind before reusing the values given here. Anything that is a build
 design choice is likely to change in the next versions: the hardcoded C2, the ports (406, 408 and 1488),
 the campaign ID, the install path, the mutex and registry names, the string-encryption constants, and even
 the fixed WebSocket key or the =jhkaloip= answer used to fingerprint the servers. Some of them have already
-changed between the three builds known so far: the C2 is an IP address in one and a domain in the
-others, and the string-encryption constants differ from one build to another. The behaviour (the WebSocket protocol, the
+changed between the builds known so far: the C2 is an IP address in some and a domain in others, and the string-encryption constants differ from one build to another. The behaviour (the WebSocket protocol, the
 module-based tasking and the stealer's collection logic) is a sturdier basis for detection than any
 single value.
 
@@ -5176,6 +5175,12 @@ side by side on the same host:
 
 All of them report version =1.0.0=, keep ports 406/408, the =WinRAR\Libs= module cache and the
 =.duckdns.org= DGA suffix. The operators did not even bother to hide the family name: it is the C2 domain.
+
+Another build, not analysed here, was described publicly by winslow (see [[*References][References]]): it installs
+itself as the same =RuntimeBroker.exe= with the same =Global\RuntimeBrokerAds= mutex and four scheduled tasks,
+and talks to =145.63.134.]94= on ports 406, 408 and 1488, the server that also received the =1.0.2= stealer's
+loot. It was delivered differently, through a fake GitHub repository and a PowerShell stager rather than
+MixLoader.
 
 *** Anti-analysis
 
@@ -5411,8 +5416,11 @@ agree on their own name: the first line of their system report is the developer'
 | =1.0.2=        | 1.4 MB  | =- Redhive Stealer:= (=11.05.2026=) | =145.63.134.]94:1488= |
 | =1.0.3=        | 1.1 MB  | =- Mops Stealer V3: 08.09.2026=  | =45.91.202.]146:1488= |
 
-Both have the same task list and the same exfiltration protocol; the latest one is named after the loader,
-so I will simply call it the Mops stealer. Its entry point enables =SeDebugPrivilege= and
+Both have the same task list and the same exfiltration protocol: between the two builds, the developer
+renamed the module from *Redhive Stealer* to *Mops Stealer V3*, after the loader. Build =1.0.2= is the one
+winslow documented under the Redhive name after being infected through a fake GitHub repository
+([[https://winslow1984.com/books/threat-intelligence/page/hey-you-hacked-a-hacker-are-you-ready-for-my-revenge][Hey, You Hacked a Hacker! Are You Ready For My Revenge?]]); the SHA-256 given there matches the one listed
+in the IOCs below. From here on I will simply call it the Mops stealer. Its entry point enables =SeDebugPrivilege= and
 =SeImpersonatePrivilege=, then starts *49 named tasks, each in its own thread*, and waits for all of them:
 
 | Category           | Tasks / targets                                                                                                   |
@@ -5595,6 +5603,15 @@ $ python3 mops_config_extractor.py 77afc987c83097f06bc98e45a4b7891e96017f59ab309
 }
 #+end_src
 
+My IDA database of the analysed loader (=265994409a3d…=, unpacked payload) is also available, with the
+functions, types and comments used throughout this post (=c2_checkserver=, =ws_send_frame=,
+=handle_task_msg=, =struct mops_task=…). It contains the sample itself, so it is shipped as a ZIP
+archive protected with the usual password, =infected=.
+
+#+begin_export hugo
+{{< download "mops/mops_loader_265994409a3d.i64.zip" >}}
+#+end_export
+
 ** Indicators of compromise
 
 *** Files
@@ -5604,6 +5621,7 @@ $ python3 mops_config_extractor.py 77afc987c83097f06bc98e45a4b7891e96017f59ab309
 | Mops Loader, campaign 6925266445 | =265994409a3dbd511ff5bd6a6d24dea5b089d41f1dea8dcaeaabccd530ea09dd= |
 | Mops Loader, campaign 5749377762 | =77afc987c83097f06bc98e45a4b7891e96017f59ab309a4744c7aee414926ad1= |
 | Mops Loader, campaign 8934503551 | =4094bddf226fb6dd45e72ce8e5d3c3fc51c96ecef9473712aff06083445503e4= |
+| Mops Loader, reported by winslow | =97c6e8a58c8ca86af979fa64a516a09cdc48c6dd61fc9dd027c4af715165fb66= |
 | Stealer module 1.0.3 (Mops Stealer V3) | =3c110de70db7225573f6bd937a7704423bce6c03fad5fac3ea3fb5bacf130d50= |
 | Stealer module 1.0.2 (Redhive)  | =9651824ed3d16bb543762a1aa5498d7fde278567c001605d0a32c2db0125cfb3= |
 | Update / download module        | =d7296170408581c38dc2c95f0c31f6b9bdf822b9b076d90122e679e13269a935= |
@@ -5642,3 +5660,9 @@ $ python3 mops_config_extractor.py 77afc987c83097f06bc98e45a4b7891e96017f59ab309
 | Collection           | T1113 Screen Capture, T1115 Clipboard Data, T1005 Data from Local System, T1560 Archive Collected Data |
 | Command and control  | T1071.001 Web Protocols, T1571 Non-Standard Port, T1568.002 DGA, T1008 Fallback Channels, T1105 Ingress Tool Transfer |
 | Exfiltration         | T1048 Exfiltration Over Alternative Protocol (raw TCP)                         |
+
+** References
+
+- winslow, [[https://winslow1984.com/books/threat-intelligence/page/hey-you-hacked-a-hacker-are-you-ready-for-my-revenge][Hey, You Hacked a Hacker! Are You Ready For My Revenge?]], Winslow Blog, 2026:
+  a victim's view of the same platform, from a fake GitHub repository to the Redhive (Mops) stealer
+  =1.0.2= and the operator's infrastructure.
