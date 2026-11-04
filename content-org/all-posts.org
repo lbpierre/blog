@@ -5071,7 +5071,8 @@ Redhive) and an update/download-and-execute module.
 
 This analysis is based on a single sample of the Mops Loader (=265994409a3d…=, campaign =6925266445=).
 Two other builds were only run through the configuration extractor, to compare their settings (see
-[[*Builds and campaigns][Builds and campaigns]]); their code was not reversed.
+[[*Builds and campaigns][Builds and campaigns]]); their code was not reversed. The analysed sample is available on
+[[https://bazaar.abuse.ch/sample/265994409a3dbd511ff5bd6a6d24dea5b089d41f1dea8dcaeaabccd530ea09dd/][MalwareBazaar]], and my IDA database of it is in the [[*Tooling][Tooling]] section.
 
 Keep this in mind before reusing the values given here. Anything that is a build parameter rather than a
 design choice is likely to change in the next versions: the hardcoded C2, the ports (406, 408 and 1488),
@@ -5618,7 +5619,7 @@ archive protected with the usual password, =infected=.
 
 | Component                 | SHA-256                                                            |
 |---------------------------+--------------------------------------------------------------------|
-| Mops Loader, campaign 6925266445 | =265994409a3dbd511ff5bd6a6d24dea5b089d41f1dea8dcaeaabccd530ea09dd= |
+| Mops Loader, campaign 6925266445 ([[https://bazaar.abuse.ch/sample/265994409a3dbd511ff5bd6a6d24dea5b089d41f1dea8dcaeaabccd530ea09dd/][MalwareBazaar]]) | =265994409a3dbd511ff5bd6a6d24dea5b089d41f1dea8dcaeaabccd530ea09dd= |
 | Mops Loader, campaign 5749377762 | =77afc987c83097f06bc98e45a4b7891e96017f59ab309a4744c7aee414926ad1= |
 | Mops Loader, campaign 8934503551 | =4094bddf226fb6dd45e72ce8e5d3c3fc51c96ecef9473712aff06083445503e4= |
 | Mops Loader, reported by winslow | =97c6e8a58c8ca86af979fa64a516a09cdc48c6dd61fc9dd027c4af715165fb66= |
